@@ -1,0 +1,11 @@
+@(notesList: List[model.Note])
+
+@main("Welcome to Play 2.0") {
+
+    <ul>
+    @for(note <- notesList) {
+        <li>@note.getId</li>
+        <li>@note.getNote</li>
+    }
+    </ul>
+}

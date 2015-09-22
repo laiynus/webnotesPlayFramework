@@ -1,15 +1,39 @@
-@(title: String)(content: Html)
-
+@(user: model.User)(content: Html)
 <!DOCTYPE html>
-
 <html>
     <head>
-        <title>@title</title>
-        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
-        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
-        <script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")" type="text/javascript"></script>
+        <title>WebNotes</title>
+        <script src="@routes.Assets.at("javascripts/jquery-2.1.4.min.js")" type="text/javascript"></script>
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/bootstrap/bootstrap.min.css")">
+        <script src="@routes.Assets.at("javascripts/bootstrap/bootstrap.min.js")" type="text/javascript"></script>
+        <script type="text/javascript" src="@routes.Application.javascriptRoutes()"></script>
     </head>
     <body>
-        @content
+        <header>
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="@routes.Notes.index()">WebNotes</a>
+                    </div>
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav">
+                            <li><a href="@routes.Notes.index()">Notes</a></li>
+                        </ul>
+                        @if(user == null) {
+                            <ul class="nav navbar-nav navbar-right">
+                                <li><a href="@routes.Application.login()">Sign In</a></li>
+                                <li><a href="#">Sign Up</a></li>
+                            </ul>
+                        } else {
+                            <ul class="nav navbar-nav navbar-right">
+                                <li><a href="#">Hello, @user.getUsername</a></li>
+                                <li><a href="@routes.Application.logout()">Log out</a></li>
+                            </ul>
+                        }
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <div class="container">@content</div>
     </body>
 </html>

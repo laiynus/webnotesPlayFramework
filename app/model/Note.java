@@ -68,12 +68,34 @@ public class Note extends Model{
 
     public static Model.Finder<Integer,Note> find = new Model.Finder<Integer,Note>(Integer.class, Note.class);
 
-    public static List<Note> all() {
+    public static List all() {
         return find.all();
     }
 
-    public static List<Note> findInvolving(String username) {
-        return find.where().eq("user.username", username).findList();
+    public static List<Note> findAllUserNotes(String username) {
+        return find.where().eq("user.username", username).orderBy("dateTimeCreate desc").findList();
+    }
+
+    public static List<Note> findLastUserNotes(String username) {
+        return find.where().eq("user.username", username).orderBy("dateTimeCreate desc").setMaxRows(10).findList();
+    }
+
+    public static Note create(String noteText, String user) {
+        Note note = new Note(User.find.ref(user), noteText,new Timestamp(new java.util.Date().getTime()));
+        note.save();
+        note.saveManyToManyAssociations("user");
+        return note;
+    }
+
+    public static boolean isNote(Integer idNote, String user) {
+        return find.where().eq("user.username", user).eq("id", idNote).findRowCount() > 0;
+    }
+
+    public static Note update(Integer idNote, String noteText) {
+        Note note = find.ref(idNote);
+        note.setDateTimeCreate(new Timestamp(new java.util.Date().getTime()));
+        note.setNote(noteText);
+        return note;
     }
 
 }

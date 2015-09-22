@@ -1,37 +1,58 @@
 package controllers;
 
-import model.Note;
 import model.User;
-import play.*;
-import play.db.jpa.Transactional;
+import play.Routes;
+import play.data.Form;
 import play.mvc.*;
 
 import views.html.*;
 
-import java.util.List;
-
-import static play.data.Form.form;
+import static play.data.Form.*;
 
 
 public class Application extends Controller {
 
     public static class Login {
-        public String email;
+        public String username;
         public String password;
-    }
 
-
-    public static Result index() {
-        return ok(index.render("Your new application is ready."));
-    }
-
-
-    public static Result notesList() {
-       return ok(notes.render(Note.all()));
+        public String validate() {
+            if (User.authenticate(username, password) == null) {
+                return "Invalid user or password";
+            }
+            return null;
+        }
     }
 
     public static Result login() {
-        return ok();
+        return ok(login.render(form(Login.class)));
+    }
+
+    public static Result authenticate() {
+        Form<Login> loginForm = form(Login.class).bindFromRequest();
+        if (loginForm.hasErrors()) {
+            return badRequest(login.render(loginForm));
+        } else {
+            session("username", loginForm.get().username);
+            return redirect(routes.Notes.index());
+        }
+    }
+
+    public static Result logout() {
+        session().clear();
+        flash("success", "You've been logged out");
+        return redirect(routes.Application.login());
+    }
+
+    public static Result javascriptRoutes() {
+        response().setContentType("text/javascript");
+        return ok(
+                Routes.javascriptRouter("jsRoutes",
+                        controllers.routes.javascript.Notes.create(),
+                        controllers.routes.javascript.Notes.delete(),
+                        controllers.routes.javascript.Notes.update()
+                )
+        );
     }
 
 }

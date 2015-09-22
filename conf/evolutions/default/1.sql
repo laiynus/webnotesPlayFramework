@@ -6,7 +6,7 @@
 create table notes (
   id                        integer not null,
   note                      varchar(255) not null,
-  datetimecreate            timestamp not null,
+  dateTimeCreate            timestamp not null,
   username                  varchar(255),
   constraint pk_notes primary key (id))
 ;

@@ -1,27 +1,35 @@
-@(user: model.User,notes: List[model.Note])
+@(user: model.User)
 
 @main(user) {
 
-    @if(notes.isEmpty) {
-
-        <div class="well">
-            <em>Nothing to display</em>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title">Your note</div>
         </div>
-
-    } else {
-
-        <table class="table table-striped table-bordered">
-            <thead>
-                <tr>
-                    <td>Note</td>
-                    <td width="200">Last date modify</td>
-                </tr>
-            </thead>
-            <tbody>
-                @notes.map { note =>
-                    @views.html.notes.item(note)
-                }
-            </tbody>
-        </table>
-    }
+        <div class="panel-body">
+            <button class="btn btn-success" id="addNote">Add note</button>
+            <button class="btn btn-warning" id="editNote" disabled="true">Update note</button>
+            <button class="btn btn-danger" id="deleteNote" disabled="true">Delete note</button>
+            <button class="btn btn-info" id="switcherNote" style="float : right ;">Show all notes</button>
+            <br>
+            <br>
+            <input hidden id="selectedNote" />
+            <input hidden id="switcher" value="last" />
+            <textarea class="form-control custom-control" id="noteText" rows="3" style="resize : vertical" placeholder="Enter your note (maximum length 1000 characters)"></textarea>
+            <br>
+            <br>
+            <br>
+            <table class="table table-striped table-bordered" id="noteTable">
+                <thead>
+                    <tr>
+                        <th>Note</th>
+                        <th width="200">Date of modify</th>
+                        <th width="70">Select</th>
+                    </tr>
+                </thead>
+                <tbody id="noteTableBody">
+                </tbody>
+            </table>
+        </div>
+    </div>
 }

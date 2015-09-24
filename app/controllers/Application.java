@@ -48,9 +48,11 @@ public class Application extends Controller {
         response().setContentType("text/javascript");
         return ok(
                 Routes.javascriptRouter("jsRoutes",
+                        controllers.routes.javascript.Notes.getNotes(),
                         controllers.routes.javascript.Notes.create(),
                         controllers.routes.javascript.Notes.delete(),
-                        controllers.routes.javascript.Notes.update()
+                        controllers.routes.javascript.Notes.update(),
+                        controllers.routes.javascript.Notes.getNote()
                 )
         );
     }

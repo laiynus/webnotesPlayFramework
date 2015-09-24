@@ -5,19 +5,24 @@
 # Home page
 GET           /                                 controllers.Notes.index()
 
-# Map static resources from the /public folder to the /assets URL path
-GET           /assets/*file                     controllers.Assets.at(path="/public", file)
-
-GET           /assets/javascripts/routes        controllers.Application.javascriptRoutes()
-
 GET           /login                            controllers.Application.login()
 
 POST          /login                            controllers.Application.authenticate()
 
 GET           /logout                           controllers.Application.logout()
 
-POST          /notes                            controllers.Notes.create()
+GET           /notes                            controllers.Notes.getNotes(switcher: String)
 
-DELETE        /notes/:id                        controllers.Notes.delete(id: Integer)
+GET           /note                             controllers.Notes.getNote(id: Integer)
 
-PUT           /notes/:id                        controllers.Notes.update(id: Integer)
+POST          /                                 controllers.Notes.create(noteText: String)
+
+DELETE        /                                 controllers.Notes.delete(id: Integer)
+
+PUT           /                                 controllers.Notes.update(id: Integer)
+
+GET           /assets/javascripts/routes        controllers.Application.javascriptRoutes()
+
+# Map static resources from the /public folder to the /assets URL path
+GET           /assets/*file                     controllers.Assets.at(path="/public", file)
+

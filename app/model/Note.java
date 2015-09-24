@@ -1,5 +1,6 @@
 package model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import play.db.ebean.Model;
 
 import javax.persistence.*;
@@ -20,6 +21,7 @@ public class Note extends Model{
     private Timestamp dateTimeCreate;
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "username")
+    @JsonIgnore
     private User user;
 
     public int getId() {
@@ -72,6 +74,10 @@ public class Note extends Model{
         return find.all();
     }
 
+    public static Note getNote(Integer id){
+        return find.where().eq("id", id).findUnique();
+    }
+
     public static List<Note> findAllUserNotes(String username) {
         return find.where().eq("user.username", username).orderBy("dateTimeCreate desc").findList();
     }
@@ -83,7 +89,6 @@ public class Note extends Model{
     public static Note create(String noteText, String user) {
         Note note = new Note(User.find.ref(user), noteText,new Timestamp(new java.util.Date().getTime()));
         note.save();
-        note.saveManyToManyAssociations("user");
         return note;
     }
 

@@ -4,10 +4,12 @@ import model.User;
 import play.Routes;
 import play.data.Form;
 import play.mvc.*;
+import play.mvc.Http.*;
 
 import views.html.*;
 
 import static play.data.Form.*;
+import static play.libs.Json.toJson;
 
 
 public class Application extends Controller {
@@ -25,7 +27,11 @@ public class Application extends Controller {
     }
 
     public static Result login() {
-        return ok(login.render(form(Login.class)));
+        if (session().get("username") != null) {
+            return redirect(routes.Notes.index());
+        } else {
+            return ok(login.render(form(Login.class)));
+        }
     }
 
     public static Result authenticate() {
@@ -52,9 +58,29 @@ public class Application extends Controller {
                         controllers.routes.javascript.Notes.create(),
                         controllers.routes.javascript.Notes.delete(),
                         controllers.routes.javascript.Notes.update(),
-                        controllers.routes.javascript.Notes.getNote()
+                        controllers.routes.javascript.Notes.getNote(),
+                        controllers.routes.javascript.Application.registered()
                 )
         );
+    }
+
+    public static Result join() {
+        if (session().get("username") != null) {
+            return redirect(routes.Notes.index());
+        } else {
+            return ok(join.render());
+        }
+    }
+
+    public static Result registered(String username, String password){
+        if(User.getUser(username)!=null){
+            return ok(toJson("This user already exist"));
+        }else{
+            User.create(username,password);
+            User.authenticate(username,password);
+            session("username", username);
+            return ok(toJson("Success"));
+        }
     }
 
 }

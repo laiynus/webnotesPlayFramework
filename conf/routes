@@ -7,6 +7,10 @@ GET           /                                 controllers.Notes.index()
 
 GET           /login                            controllers.Application.login()
 
+GET           /join                             controllers.Application.join()
+
+POST          /join                             controllers.Application.registered(username: String, password: String)
+
 POST          /login                            controllers.Application.authenticate()
 
 GET           /logout                           controllers.Application.logout()

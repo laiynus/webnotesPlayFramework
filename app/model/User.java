@@ -10,11 +10,11 @@ import java.util.List;
 public class User extends Model {
 
     @Id
-    @Column(name = "username",unique = true,nullable = false)
+    @Column(name = "username", unique = true, nullable = false)
     String username;
-    @Column(name = "password",nullable = false)
+    @Column(name = "password", nullable = false)
     String password;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user",fetch=FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.LAZY)
     private List<Note> notes;
 
     public User() {
@@ -49,10 +49,20 @@ public class User extends Model {
         this.notes = notes;
     }
 
-    public static Model.Finder<String,User> find = new Model.Finder<String,User>(String.class, User.class);
+    public static Model.Finder<String, User> find = new Model.Finder<String, User>(String.class, User.class);
 
     public static User authenticate(String username, String password) {
         return find.where().eq("username", username).eq("password", password).findUnique();
+    }
+
+    public static User create(String username, String password) {
+        User user = new User(username, password);
+        user.save();
+        return user;
+    }
+
+    public static User getUser(String username){
+        return find.where().eq("username",username).findUnique();
     }
 
 }

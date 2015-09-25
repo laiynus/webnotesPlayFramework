@@ -138,4 +138,39 @@ root.selectNote = (tmp) ->
       $("#noteText").val(data.note)
 
 
+$(document).ready ->
+  $("#registredUser").on "click", ->
+    $("#errorBox").remove()
+    username = $("#username").val()
+    password = $("#password").val()
+    confirmPassword = $("#confirmPassword").val()
+    if(!username.trim() || !password.trim() || !confirmPassword.trim())
+      $( "<div id='errorBox' class='alert alert-danger fade in'>" +
+          "<button type='button' class='close' data-dismiss='alert'>&times;</button>All fields are required!</div>")
+        .insertBefore( "#registrationForm")
+    else
+      if(password!=confirmPassword)
+        $( "<div id='errorBox' class='alert alert-danger fade in'>" +
+            "<button type='button' class='close' data-dismiss='alert'>&times;</button>Passwords aren't match!</div>")
+          .insertBefore( "#registrationForm")
+      else
+        r = jsRoutes.controllers.Application.registered(username,password)
+        $.ajax
+          url:  r.url
+          type: r.type
+          context: this
+          error: (jqXHR, textStatus, errorThrown) ->
+            $( "<div id='errorBox' class='alert alert-danger fade in'>" +
+                "<button type='button' class='close' data-dismiss='alert'>&times;</button>" + textStatus + "</div>")
+            .insertBefore( "#registrationForm")
+          success: (data, textStatus, jqXHR) ->
+            if(data == "Success")
+              window.location.replace("/")
+            else
+              $( "<div id='messageBox' class='alert alert-danger fade in'>" +
+                  "<button type='button' class='close' data-dismiss='alert'>&times;</button>" + data + "</div>")
+              .insertBefore( "#registrationForm")
+
+
+
 

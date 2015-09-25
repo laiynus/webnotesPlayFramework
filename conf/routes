@@ -19,7 +19,7 @@ POST          /                                 controllers.Notes.create(noteTex
 
 DELETE        /                                 controllers.Notes.delete(id: Integer)
 
-PUT           /                                 controllers.Notes.update(id: Integer)
+PUT           /                                 controllers.Notes.update(id: Integer, noteText: String)
 
 GET           /assets/javascripts/routes        controllers.Application.javascriptRoutes()
 

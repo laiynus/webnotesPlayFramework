@@ -28,9 +28,9 @@ public class Notes extends Controller {
         return ok(toJson(note));
     }
 
-    public static Result update(Integer idNote) {
+    public static Result update(Integer idNote, String noteText) {
         if (Secured.isNoteOf(idNote)) {
-            return ok(toJson(Note.update(idNote, form().bindFromRequest().get("noteText"))));
+            return ok(toJson(Note.update(idNote, noteText)));
         } else {
             return forbidden();
         }

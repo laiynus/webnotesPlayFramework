@@ -100,6 +100,7 @@ public class Note extends Model{
         Note note = find.ref(idNote);
         note.setDateTimeCreate(new Timestamp(new java.util.Date().getTime()));
         note.setNote(noteText);
+        note.update();
         return note;
     }
 

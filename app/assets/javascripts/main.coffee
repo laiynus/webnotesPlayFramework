@@ -27,7 +27,7 @@ $(document).ready ->
               rowCount = $('#noteTable tr').length
               if(rowCount<=10 || $("#switcher").val()=="all")
                 date = new Date(data.dateTimeCreate)
-                $("<tr><td style='display:none'>" + data.id + "</td><td>" + data.note + "</td><td>" + date + "<td><input type='button' value='Select note' onclick='selectNote(this)' class='btn btn-warning'/>" +  "</td></tr>").insertBefore('#noteTable > tbody > tr:first');
+                $("<tr><td style='display:none' id='" + data.id + "'>" + data.id + "</td><td>" + data.note + "</td><td>" + date + "<td><input type='button' value='Select note' onclick='selectNote(this)' class='btn btn-warning'/>" +  "</td></tr>").insertBefore('#noteTable > tbody > tr:first');
 
     $(document).ready getNotes =  ->
         switcher = $('#switcher').val()
@@ -64,7 +64,60 @@ $(document).ready ->
           getNotes()
           $("#switcherNote").html('Show all notes')
 
-$(document).ready selectNote = (tmp) ->
+    $(document).ready ->
+    $("#deleteNote").on "click", ->
+      id = $("#selectedNote").attr('name')
+      $("#errorBox").remove()
+      $("#messageBox").remove()
+      r = jsRoutes.controllers.Notes.delete(id)
+      $.ajax
+        url:  r.url
+        type: r.type
+        context: this
+        error: (jqXHR, textStatus, errorThrown) ->
+          $( "<div id='errorBox' class='alert alert-danger fade in'>" +
+              "<button type='button' class='close' data-dismiss='alert'>&times;</button>" + textStatus + "</div>")
+          .insertBefore( "#addNote")
+          $("#noteText").val('')
+        success: (data, textStatus, jqXHR) ->
+          $( "<div id='messageBox' class='alert alert-success fade in'>" +
+              "<button type='button' class='close' data-dismiss='alert'>&times;</button>Note successfully deleted</div>")
+          .insertBefore( "#addNote")
+          $("#noteText").val('')
+          $("#editNote").prop('disabled', true)
+          $("#deleteNote").prop('disabled', true)
+          $("#selectedNote").removeAttr("name")
+          getNotes()
+          $("tr:not(:has(#" + id +"))").remove()
+
+    $(document).ready ->
+    $("#editNote").on "click", ->
+      id = $("#selectedNote").attr('name')
+      note = $('#noteText').val()
+      $("#errorBox").remove()
+      $("#messageBox").remove()
+      r = jsRoutes.controllers.Notes.update(id,note)
+      $.ajax
+        url:  r.url
+        type: r.type
+        context: this
+        error: (jqXHR, textStatus, errorThrown) ->
+          $( "<div id='errorBox' class='alert alert-danger fade in'>" +
+              "<button type='button' class='close' data-dismiss='alert'>&times;</button>" + textStatus + "</div>")
+          .insertBefore( "#addNote")
+          $("#noteText").val('')
+        success: (data, textStatus, jqXHR) ->
+          $( "<div id='messageBox' class='alert alert-success fade in'>" +
+              "<button type='button' class='close' data-dismiss='alert'>&times;</button>Note successfully updated</div>")
+          .insertBefore( "#addNote")
+          $("#noteText").val('')
+          $("#editNote").prop('disabled', true)
+          $("#deleteNote").prop('disabled', true)
+          $("#selectedNote").removeAttr("name")
+          getNotes()
+
+root = exports ? this
+root.selectNote = (tmp) ->
   id = +($(tmp).parents('tr:first').find('td:first').text())
   $("#errorBox").remove()
   $("#messageBox").remove()
@@ -83,3 +136,6 @@ $(document).ready selectNote = (tmp) ->
       $("#deleteNote").prop('disabled', false)
       $("#selectedNote").attr("name",data.id)
       $("#noteText").val(data.note)
+
+
+

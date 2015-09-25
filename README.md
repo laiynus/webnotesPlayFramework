@@ -1,4 +1,4 @@
-This is your new Play application
-=====================================
+#webnotesPlayFramework
 
-This file will be packaged with your application, when using `play dist`.
+Web application to manage user's notes. After registration or authorization you can manage your notes (create, update, delete them). 
+Technology used: Play!Framework, Ebean, CoffeScript with Jquery.
